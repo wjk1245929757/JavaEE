@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+</head>
+<body>
+
+<h1 th:text="${session.msg}">欢迎</h1>
+
+<h2 th:if="${param.error}">
+	登录失败
+</h2>
+<form action="/dologin" method="post">
+    账号：<input type="text" name="username"><br>
+    密码： <input type="password" name="password"><br>
+    <input type="submit" value="登录">
+</form>
+<a href = "/register">没有账号？点此注册</a>
+
+</body>
+</html>

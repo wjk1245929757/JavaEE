@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<!--  
+<form th:action="@{/logout}" method="post">
+     <input type="submit" value="Sign Out"/>
+</form>
+ -->
+<table border="1px">
+        <tr>
+            <th>序号</th>
+            <th>书名</th>
+            <th>内容</th>
+            <th>操作</th>
+        </tr>
+		<ul th:each="c, State : ${listmap}">
+     		<li th:text="${c.id}" ></li>
+     		<li th:text="${c.name}"></li>
+		</ul>
+        <tr th:each="book:${books}">
+            <td th:text="${book.bid}"></td>
+            <td th:text="${book.bname}"></td>
+            <td th:text="${book.content}"></td>
+            <td>
+                <!--  <a th:href="@{|/book/${book.bid}/edit|}">更新</a>  -->
+                <form th:action="@{|/book/${book.bid}/edit|}" method="post">
+					<!-- <input type="hidden" name="_method" value="put"/> -->
+					<button type="submit" > 更新</button>
+				</form>
+				<!--  <a th:href="@{|/book/${book.bid}|}">更新</a>  -->
+                <form th:action="@{|/book/${book.bid}|}" method="post">
+					<input type="hidden" name="_method" value="delete"/>
+					<button type="submit" > 删除</button>
+				</form>
+				<a th:href="@{|/books/${book.bid}|}">查看</a>
+                <!-- <a th:href="@{|/book/${book.bid}|}">删除</a> -->
+            </td>
+        </tr>
+    </table>
+    <a href="/create">新增</a>
+</body>
+</html>

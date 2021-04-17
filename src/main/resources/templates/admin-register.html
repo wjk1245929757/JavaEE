@@ -1,21 +1,19 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>register</title>
+<meta charset="UTF-8">
+<title>Insert title here</title>
 </head>
 <body>
-
 <h1 th:text="${msg}">欢迎</h1>
 
-<form action="/doregister" method="post">
+<form action="/doAdminRegister" method="post">
     账号：<input type="text" name="uid"><br>
     用户名：<input type="text" name="uname"><br>
     密码：<input type="password" name="password"><br>
     <input type="submit" value="注册"><br>
 </form>
-
 <a href = "/login">已有账号，点此登录</a><br>
-<a href = "/adminRegister">管理员注册</a><br>
+<a href = "/register">用户注册</a><br>
 </body>
 </html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>books</title>
+</head>
+<body>
+<table border="1px">
+        <tr>
+            <th>序号</th>
+            <th>书名</th>
+            <th>内容</th>
+            <th>操作</th>
+        </tr>
+		<ul th:each="c, State : ${listmap}">
+     		<li th:text="${c.id}" ></li>
+     		<li th:text="${c.name}"></li>
+		</ul>
+        <tr th:each="book:${books}">
+            <td th:text="${book.bid}"></td>
+            <td th:text="${book.bname}"></td>
+            <td th:text="${book.content}"></td>
+            <td>
+				<a th:href="@{|/books/${book.bid}|}">查看</a>
+                <!-- <a th:href="@{|/book/${book.bid}|}">删除</a> -->
+            </td>
+        </tr>
+</table>
+<a href = "/admin/books">管理员页面</a><br>
+
+</body>
+</html>

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>books</title>
 </head>
 <body>
 <!--  
@@ -27,20 +27,20 @@
             <td th:text="${book.content}"></td>
             <td>
                 <!--  <a th:href="@{|/book/${book.bid}/edit|}">更新</a>  -->
-                <form th:action="@{|/book/${book.bid}/edit|}" method="post">
+                <form th:action="@{|/admin/book/${book.bid}/edit|}" method="post">
 					<!-- <input type="hidden" name="_method" value="put"/> -->
 					<button type="submit" > 更新</button>
 				</form>
 				<!--  <a th:href="@{|/book/${book.bid}|}">更新</a>  -->
-                <form th:action="@{|/book/${book.bid}|}" method="post">
+                <form th:action="@{|/admin/book/${book.bid}|}" method="post">
 					<input type="hidden" name="_method" value="delete"/>
 					<button type="submit" > 删除</button>
 				</form>
-				<a th:href="@{|/books/${book.bid}|}">查看</a>
+				<a th:href="@{|/admin/books/${book.bid}|}">查看</a>
                 <!-- <a th:href="@{|/book/${book.bid}|}">删除</a> -->
             </td>
         </tr>
     </table>
-    <a href="/create">新增</a>
+    <a href="/admin/create">新增</a>
 </body>
 </html>

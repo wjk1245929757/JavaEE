@@ -1,16 +1,22 @@
 package com.example.demo.controller;
 
-import javax.servlet.http.HttpSession;
+import java.util.Set;
 
-import org.apache.ibatis.annotations.Param;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.swing.text.View;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.example.demo.domain.User;
 import com.example.demo.service.UserService;
@@ -24,7 +30,7 @@ import com.example.demo.service.UserService;
  */
 
 @Controller
-public class UserLoginController {
+public class LoginController {
 	
 	
 	@Autowired 
@@ -42,6 +48,7 @@ public class UserLoginController {
 		}
 	}
 	
+	
 //	@RequestMapping(value = "/login?error", method = RequestMethod.GET)
 //	public String logout(HttpSession session) {
 //
@@ -52,24 +59,19 @@ public class UserLoginController {
 //	}
 	
 	@RequestMapping(value = "/dologin", method = RequestMethod.POST)
-	public String loginCheck(@Param("username")String uid, 
-			@Param("password")String password,
+	public String loginCheck(@RequestParam("username") String uid,
+			@RequestParam("password") String password,
 			HttpSession session) {
 		System.out.println("/dologin");
-//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        if (!(auth instanceof AnonymousAuthenticationToken))
-//    		 return "redirect:/books";
-//
-//        else 
-//	         return "login";
-		User user = new User();
-		user.setUid(uid);
-		user.setPassword(password);
-		System.out.println(user.toString());
-		String s = userService.login(user);
-		
-		if (s.equals(new String("Sucess"))) {	
-	        return "redirect:/books";
+		String s = userService.login(uid,password);
+		System.out.println(s);
+		if (s.equals(new String("Sucess"))) {
+			User u = userService.getUserByUid(uid);
+			System.out.println("new u:"+u.toString());
+			if (u.getRole().equalsIgnoreCase(new String("ROLE_ADMIN"))) {
+		        return "redirect:/admin/books";
+			}
+			return "redirect:/books";
 		}else {
 	        session.setAttribute("msg", s);
 		}
@@ -77,5 +79,7 @@ public class UserLoginController {
 		
 		return "login";
 	}
+	
+	
 
 }

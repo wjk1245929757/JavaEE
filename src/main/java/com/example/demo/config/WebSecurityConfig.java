@@ -17,6 +17,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private MyAccessDenied myAccessDenied;
 
 	@Bean
     public BCryptPasswordEncoder passwordEncoder(){
@@ -65,14 +68,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http
         	.formLogin()   //使用表单登录页面
         		.loginPage("/login")    //登录url
-        		.loginProcessingUrl("/dologin")    //登录提交url
+        		.loginProcessingUrl("/dologin")
         		.defaultSuccessUrl("/books")
         		.and()
+        	
         	.authorizeRequests()
-        		.antMatchers("/register", "/doregister", "/login", "/dologin").permitAll()
+        		.antMatchers("/register", "/doregister", "/login", 
+        				"/adminLogin","/doAdminLogin",
+        				"/dologin","/adminRegister","/doAdminRegister").permitAll()
+        		.antMatchers("/admin/**").hasAnyAuthority("ROLE_ADMIN")
         		.anyRequest().authenticated()
         		.and()
         	.csrf().disable();
+		 http.exceptionHandling().accessDeniedHandler(myAccessDenied);
 
 	}
 	

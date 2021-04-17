@@ -6,7 +6,7 @@
 </head>
 <body>
 <!-- @{|/book/${book.bid}|} -->
-<form th:action="@{|/book/${book.bid}|}" method="post">
+<form th:action="@{|/admin/book/${book.bid}|}" method="post">
 	<input type="hidden" name="_method" value="put"/>
 	<scan>序号：</scan><scan th:text="${book.bid}"></scan>
     <br/>

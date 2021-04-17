@@ -21,12 +21,11 @@ import com.example.demo.domain.Book;
 import com.example.demo.service.BookService;
 
 @Controller
-public class BookController {
-	
+@RequestMapping(value = {"/admin"})
+public class BookAdminController {
 	
 	@Autowired
 	private BookService bookService;
-	
 	
 	//增
 	@RequestMapping(value = {"/create"})
@@ -39,7 +38,7 @@ public class BookController {
 	public String create(@ModelAttribute Book book, HttpSession session) {
 		String s = bookService.create(book);
 		if(s == "Sucess") {
-			return "redirect:/books";
+			return "redirect:/admin/books";
 		}
 		session.setAttribute("msg", s);
 		return "book-create";
@@ -50,7 +49,7 @@ public class BookController {
 	public String delete(@PathVariable String bid, HttpSession session) {
 		System.out.println("edit"+"  "+bid);
 		bookService.delete(bid);
-		return "redirect:/books";
+		return "redirect:/admin/books";
 	}
 	
 	//改
@@ -65,7 +64,7 @@ public class BookController {
 	public String update(@PathVariable String bid, Book book) {
 		System.out.println(book.toString());
 		bookService.update(book);
-		return "redirect:/books";
+		return "redirect:/admin/books";
 	}
 	//查
 	@RequestMapping(value = "/books", method = RequestMethod.GET)

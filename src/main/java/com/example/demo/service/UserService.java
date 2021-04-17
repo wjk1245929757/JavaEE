@@ -33,9 +33,9 @@ public class UserService  implements UserDetailsService {
 	
 	private boolean isUidMatchPassword(String uid,String password) {
 		String psw = usermapper.selectUserByUid(uid).getPassword();
-		System.out.println(password);
-		System.out.println(psw);
-		System.out.println(passwordEncoder.matches(password, psw));
+//		System.out.println(password);
+//		System.out.println(psw);
+//		System.out.println(passwordEncoder.matches(password, psw));
 		if(passwordEncoder.matches(password, psw)) {
 			return true;
 		}
@@ -57,6 +57,17 @@ public class UserService  implements UserDetailsService {
 		
 	}
 	
+	public String login(String uid, String password) {
+		if(isUidExisted(uid)) {
+			if( isUidMatchPassword( uid,password ) ) {
+				return "Sucess";
+			}
+			return "密码错误";
+		}
+		return "账号不存在";
+		
+	}
+	
 	
 	public String register(User user) {
 		if(user.getUid() == null || user.getUname()==null || user.getPassword()==null) {
@@ -68,8 +79,8 @@ public class UserService  implements UserDetailsService {
 		String psw =user.getPassword();
 		String encodePsw = passwordEncoder.encode(psw);
 		user.setPassword(encodePsw);
-		System.out.println(psw);
-		System.out.println(encodePsw);
+//		System.out.println(psw);
+//		System.out.println(encodePsw);
 		usermapper.create(user);
 		return "Sucess";
 	}
@@ -77,16 +88,17 @@ public class UserService  implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String uid) throws UsernameNotFoundException {
 		User myUser = usermapper.selectUserByUid(uid);
-		System.out.println("uid:" + uid);
+//		System.out.println("uid:" + uid);
         if (myUser == null){
             throw new UsernameNotFoundException("用户不存在！");
         }
+        String role = myUser.getRole();
         Collection<GrantedAuthority> authorities = new ArrayList<>();         
-        authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        authorities.add(new SimpleGrantedAuthority(role));
         org.springframework.security.core.userdetails.User user = 
         		new org.springframework.security.core.userdetails.User(myUser.getUid(),myUser.getPassword(),authorities);
         System.out.println("账号："+myUser.getUid()+"   "+myUser.getPassword()+"  "+user.getAuthorities());
-        System.out.println(myUser.getPassword());
+//        System.out.println(myUser.getPassword());
         return user;
 
 //        ArrayList<GrantedAuthority> authorities = new ArrayList<>();

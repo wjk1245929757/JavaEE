@@ -18,13 +18,13 @@ import com.example.demo.entity.Book;
 
 @Mapper
 public interface BookMapper {
-	@Insert("insert into book(bid,bname,author,content) values(#{bid},#{bname},#{author},#{content})")
+	@Insert("insert into book(bid,bname,author,content,price) values(#{bid},#{bname},#{author},#{content},#{price})")
 	void create(Book book);
 	
 	@Delete("delete from book where bid = #{bid}")
 	void delete(String bid);
 	
-	@Update("update book set bname = #{bname},author = #{author}, content = #{content} where bid = #{bid}")  
+	@Update("update book set bname = #{bname},author = #{author}, content = #{content}, price = #{price} where bid = #{bid}")
     void update(Book book);
 	
 	@Update("update book set path = #{path} where bid = #{bid}")  
@@ -33,13 +33,14 @@ public interface BookMapper {
 	@Update("update book set path = null where bid = #{bid}")  
     void deleteFile(Book book);
 	
-	@Select({"select bid,bname,author,content,path from book where bid = #{bid}"})
+	@Select({"select bid,bname,author,content,path,price from book where bid = #{bid}"})
 	@Results(id="bookMap", value={
 			@Result(column="bid", property="bid",jdbcType=JdbcType.VARCHAR, id=true),
 		    @Result(column="bname", property="bname",jdbcType=JdbcType.VARCHAR),
 		    @Result(column="author", property="author",jdbcType=JdbcType.VARCHAR),
 		    @Result(column="content", property="content",jdbcType=JdbcType.VARCHAR),
-		    @Result(column="path", property="path",jdbcType=JdbcType.VARCHAR)
+		    @Result(column="path", property="path",jdbcType=JdbcType.VARCHAR),
+			@Result(column="price", property="price",jdbcType=JdbcType.INTEGER)
 	})
 	Book selectBookByBid(String bid);
 	

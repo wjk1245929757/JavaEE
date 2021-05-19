@@ -10,6 +10,9 @@
           <el-form-item label="作者">
             <el-input v-model="updateBookForm.author" placeholder="请输入作者"></el-input>
           </el-form-item>
+          <el-form-item label="价格">
+            <el-input v-model="updateBookForm.price" placeholder="请输入价格"></el-input>
+          </el-form-item>
           <el-form-item label="内容">
             <el-input
               v-model="updateBookForm.content"
@@ -18,7 +21,7 @@
               :autosize="{ minRows: 4, maxRows: 8}">
             </el-input>
           </el-form-item>
-          <div v-if="fileIsNull">
+          <div v-if="fileIsNull && isAdmin">
             <el-form-item label="源文件">
               <el-input
                 v-model="updateBookForm.path"
@@ -32,11 +35,15 @@
           <div v-else>
             <div>{{this.updateBookForm.path}}</div>
             <el-button type="button" v-on:click="downloadFile()">下载文件</el-button>
-            <el-button type="button" v-on:click="deleteFile()">删除文件</el-button>
+            <div v-if="isAdmin">
+              <el-button type="button" v-on:click="deleteFile()">删除文件</el-button>
+            </div>
           </div>
         </el-form>
         <br>
-        <el-button type="button" id="fileCommit" v-on:click="updateBook()">提交</el-button>
+        <div v-if="isAdmin">
+          <el-button type="button" id="fileCommit" v-on:click="updateBook()">提交</el-button>
+        </div>
         <el-button type="button" v-on:click="back()">返回</el-button>
       </div>
     </div>
@@ -50,6 +57,7 @@ export default {
   name: 'BookDetail',
   data () {
     return {
+      isAdmin: false,
       fileIsNull: false,
       formData: new FormData(),
       fileData: null,
@@ -57,6 +65,7 @@ export default {
         bid: '',
         bname: '',
         author: '',
+        price: '',
         content: '',
         path: ''
       }
@@ -186,9 +195,26 @@ export default {
         console.log(res)
         this.$router.go(0)
       })
+    },
+    getRole () {
+      axios({
+        method: 'get',
+        url: 'http://localhost:8081/getrole',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': localStorage.getItem('jwtToken')
+        }
+      }).then(res => {
+        console.log(res)
+        if (res.data === 'ROLE_ADMIN') {
+          this.isAdmin = true
+        }
+        console.log('admin:' + this.isAdmin)
+      })
     }
   },
   mounted () {
+    this.getRole()
     this.getBook()
   }
 }

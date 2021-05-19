@@ -32,11 +32,14 @@ public class BookController {
         String name = jsonObject.getString("bname");
         String author = jsonObject.getString("author");
         String content = jsonObject.getString("content");
-        
+        int price = jsonObject.getInteger("price");
+
 		Book book = new Book();
 		book.setBname(name);
 		book.setAuthor(author);
 		book.setContent(content);
+		book.setPrice(price);
+
 		bookService.createBook(book);
 		System.out.println("create  "+book.toString());
 		return book.getBid();
@@ -58,11 +61,13 @@ public class BookController {
         String name = jsonObject.getString("bname");
         String author = jsonObject.getString("author");
         String content = jsonObject.getString("content");
+		int price = jsonObject.getInteger("price");
         
 		Book book = bookService.selectBookByBid(bid);
 		book.setBname(name);
 		book.setAuthor(author);
 		book.setContent(content);
+		book.setPrice(price);
 		System.out.println("update:"+book.toString());
 		bookService.updateBook(book);
 		return "Success";

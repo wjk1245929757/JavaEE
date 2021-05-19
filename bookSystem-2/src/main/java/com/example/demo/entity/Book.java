@@ -4,6 +4,7 @@ public class Book {
 	private String bid;
 	private String bname;
 	private String author;
+	private int price;
 	private String content;
 	private String path;
 
@@ -25,6 +26,12 @@ public class Book {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
+	public int getPrice() {
+		return price;
+	}
+	public void setPrice(int price) {
+		this.price = price;
+	}
 	public String getContent() {
 		return content;
 	}
@@ -39,8 +46,8 @@ public class Book {
 	}
 	@Override
 	public String toString() {
-		return "Book [bid=" + bid + ", bname=" + bname + ", author=" + author + ", content=" + content + ", path="
-				+ path + "]";
+		return "Book [bid=" + bid + ", bname=" + bname + ", author=" + author + ", price=" + price + ", content="
+				+ content + ", path=" + path + "]";
 	}
 	
 

@@ -12,7 +12,7 @@
         <el-table-column
           prop="bname"
           label="书名"
-          width="180">
+          width="100">
         </el-table-column>
         <el-table-column
           prop="author"
@@ -20,20 +20,42 @@
           width="180">
         </el-table-column>
         <el-table-column
+          prop="price"
+          label="价格"
+          width="100">
+        </el-table-column>
+        <el-table-column
           prop="content"
           label="内容简介">
         </el-table-column>
         <el-table-column label="操作" width="160">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="handleClick1(scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleClick2(scope.row)">删除</el-button>
+            <div v-if="isAdmin">
+              <el-button size="mini" type="primary" @click="handleClick1(scope.row)">编辑</el-button>
+              <el-button size="mini" type="danger" @click="handleClick2(scope.row)">删除</el-button>
+            </div>
+            <div v-else>
+              <el-button size="mini" type="primary" @click="handleClick1(scope.row)">查看</el-button>
+              <el-button size="mini" type="danger" @click="handleClick5(scope.row)">购买</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <br/>
-    <el-button type="button" @click="handleClick3()">添加</el-button>
     <el-button type="button" @click="handleClick4()">个人中心</el-button>
+    <div v-if="isAdmin">
+      <br/>
+      <el-button type="button" @click="handleClick3()">添加</el-button>
+    </div>
+    <div v-else>
+      <br>
+      <div>已选书籍：{{this.temp_book}}</div>
+      <div>价格：{{this.total_price}}</div>
+      <br>
+      <el-button type="button" @click="clearCart()">清空购物车</el-button>
+      <el-button type="button" @click="buy()">确认购买</el-button>
+    </div>
   </div>
 </template>
 
@@ -44,10 +66,15 @@ export default {
   name: 'Home',
   data () {
     return {
+      temp_book: '',
+      // choose_book: '',
+      total_price: 0,
+      isAdmin: false,
       tableData: [{
         bid: '??',
         bname: '??',
         author: '??',
+        price: '??',
         content: '??'
       }]
     }
@@ -79,6 +106,31 @@ export default {
     handleClick4 () {
       this.$router.push('/Admin')
     },
+    handleClick5 (row) {
+      // this.temp_book = localStorage.clear()
+      if (this.temp_book === null || this.temp_book === undefined || this.temp_book === '') {
+        this.temp_book = row.bname
+      } else {
+        this.temp_book += ',' + row.bname
+      }
+      this.total_price += row.price
+      console.log(localStorage.getItem('buy'))
+      this.$message.success(row.bname + '成功添加至购物车')
+    },
+    clearCart () {
+      this.temp_book = ''
+      this.total_price = 0
+    },
+    buy () {
+      const weiXinUrl = require('../assets/wechat.jpg')
+      const aLiUrl = require('../assets/zhifubao.jpg')
+      this.$alert('<strong><img src=' + weiXinUrl + ' width=150px height=200px><img src=' + aLiUrl + ' width=150px height=200px></strong>', '请扫描下方二维码进行支付：', {
+        dangerouslyUseHTMLString: true
+      }).then(action => {
+        this.$message.success('购买成功')
+        this.clearCart()
+      })
+    },
     getBookList () {
       axios({
         method: 'get',
@@ -91,10 +143,27 @@ export default {
         console.log(res)
         this.tableData = res.data
       })
+    },
+    getRole () {
+      axios({
+        method: 'get',
+        url: 'http://localhost:8081/getrole',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': localStorage.getItem('jwtToken')
+        }
+      }).then(res => {
+        console.log(res)
+        if (res.data === 'ROLE_ADMIN') {
+          this.isAdmin = true
+        }
+        console.log('admin:' + this.isAdmin)
+      })
     }
   },
   mounted () {
     console.log(localStorage.getItem('jwtToken'))
+    this.getRole()
     this.getBookList()
   }
 }

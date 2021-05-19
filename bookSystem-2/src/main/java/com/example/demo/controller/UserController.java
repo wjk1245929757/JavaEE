@@ -51,7 +51,15 @@ public class UserController {
 		return checkCodeUtils.sendCheckCode(email);
 	}
 	
+	@RequestMapping(value = "/getrole", method = RequestMethod.GET)
+	@ExtRateLimiter(permitsPerSecond = 2, timeout = 500)
+	public String getRole() {
+		System.out.println(userService.selectUserByEmail( (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal() ).getRole());
+		return userService.selectUserByEmail( (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal() ).getRole();
+	}
+	
 	@RequestMapping(value = "/user/user", method = RequestMethod.PUT)
+	@ExtRateLimiter(permitsPerSecond = 2, timeout = 500)
 	public String updateUser(@RequestBody JSONObject jsonObject) {
 //		String email = jsonObject.getString("email");
 		String password = jsonObject.getString("password");
